@@ -109,7 +109,6 @@ function Nav() {
 function AppRoutes({user}) {
   return (
     <div>
-      <Nav />
       <Routes>
         <Route path="/discover" element={<DiscoverBooksScreen user={user} />} />
         <Route path="/book/:bookId" element={<BookScreen user={user} />} />
