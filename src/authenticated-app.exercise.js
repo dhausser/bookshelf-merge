@@ -2,7 +2,7 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react'
-import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom'
+import {Routes, Route, Link} from 'react-router-dom'
 import {Button} from './components/lib'
 import * as mq from './styles/media-queries'
 import * as colors from './styles/colors'
@@ -12,7 +12,7 @@ import {NotFoundScreen} from './screens/not-found'
 
 function AuthenticatedApp({user, logout}) {
   return (
-    <Router>
+    <React.Fragment>
       <div
         css={{
           display: 'flex',
@@ -50,7 +50,7 @@ function AuthenticatedApp({user, logout}) {
           <AppRoutes user={user} />
         </main>
       </div>
-    </Router>
+    </React.Fragment>
   )
 }
 
