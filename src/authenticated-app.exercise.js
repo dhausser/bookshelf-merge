@@ -55,7 +55,7 @@ function AuthenticatedApp({user, logout}) {
 }
 
 function NavLink(props) {
-  const matches = useMatch(props.to)
+  const match = useMatch(props.to)
   return (
     <Link
       css={[
@@ -74,7 +74,7 @@ function NavLink(props) {
             background: colors.gray10,
           },
         },
-        matches
+        match
           ? {
               borderLeft: `5px solid ${colors.indigo}`,
               background: colors.gray10,
