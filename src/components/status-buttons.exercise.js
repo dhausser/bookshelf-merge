@@ -48,13 +48,12 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
 }
 
 function StatusButtons({user, book}) {
-  // const {data: listItems} = useQuery({
-  //   queryKey: 'list-items',
-  //   queryFn: () =>
-  //     client('list-items', {token: user.token}).then(data => data.listItems),
-  // })
-  // const listItem = listItems?.find(li => li.bookId === book.id) ?? null
-  const listItem = null
+  const {data: listItems} = useQuery({
+    queryKey: 'list-items',
+    queryFn: () =>
+      client('list-items', {token: user.token}).then(data => data.listItems),
+  })
+  const listItem = listItems?.find(li => li.bookId === book.id) ?? null
 
   // const [update] = useMutation(
   //   updates =>
