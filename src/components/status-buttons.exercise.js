@@ -65,10 +65,10 @@ function StatusButtons({user, book}) {
   //   {onSettled: () => queryCache.invalidateQueries('list-items')},
   // )
 
-  // const [remove] = useMutation(
-  //   ({id}) => client(`list-items/${id}`, {method: 'DELETE', token: user.token}),
-  //   {onSettle: () => queryCache.invalidateQueries('list-items')},
-  // )
+  const [remove] = useMutation(
+    ({id}) => client(`list-items/${id}`, {method: 'DELETE', token: user.token}),
+    {onSettle: () => queryCache.invalidateQueries('list-items')},
+  )
 
   const [create] = useMutation(
     ({bookId}) => client(`list-items`, {data: {bookId}, token: user.token}),
@@ -98,7 +98,7 @@ function StatusButtons({user, book}) {
         <TooltipButton
           label="Remove from list"
           highlight={colors.danger}
-          // onClick={() => remove({id: listItem.id})}
+          onClick={() => remove({id: listItem.id})}
           icon={<FaMinusCircle />}
         />
       ) : (
