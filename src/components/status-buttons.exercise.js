@@ -55,15 +55,15 @@ function StatusButtons({user, book}) {
   })
   const listItem = listItems?.find(li => li.bookId === book.id) ?? null
 
-  // const [update] = useMutation(
-  //   updates =>
-  //     client(`list-items/${updates.id}`, {
-  //       method: 'PUT',
-  //       data: updates,
-  //       token: user.token,
-  //     }),
-  //   {onSettled: () => queryCache.invalidateQueries('list-items')},
-  // )
+  const [update] = useMutation(
+    updates =>
+      client(`list-items/${updates.id}`, {
+        method: 'PUT',
+        data: updates,
+        token: user.token,
+      }),
+    {onSettled: () => queryCache.invalidateQueries('list-items')},
+  )
 
   const [remove] = useMutation(
     ({id}) => client(`list-items/${id}`, {method: 'DELETE', token: user.token}),
@@ -82,14 +82,14 @@ function StatusButtons({user, book}) {
           <TooltipButton
             label="Unmark as read"
             highlight={colors.yellow}
-            // onClick={() => update({id: listItem.id, finishDate: null})}
+            onClick={() => update({id: listItem.id, finishDate: null})}
             icon={<FaBook />}
           />
         ) : (
           <TooltipButton
             label="Mark as read"
             highlight={colors.green}
-            // onClick={() => update({id: listItem.id, finishDate: Date.now()})}
+            onClick={() => update({id: listItem.id, finishDate: Date.now()})}
             icon={<FaCheckCircle />}
           />
         )
