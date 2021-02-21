@@ -28,9 +28,10 @@ const loadingBook = {
 function BookScreen({user}) {
   const {bookId} = useParams()
 
-  const {data} = useQuery({
+  const {data: book = loadingBook} = useQuery({
     queryKey: ['book', {bookId}],
-    queryFn: () => client(`books/${bookId}`, {token: user.token}),
+    queryFn: () =>
+      client(`books/${bookId}`, {token: user.token}).then(data => data.book),
   })
 
   const {data: listItems} = useQuery({
@@ -40,7 +41,6 @@ function BookScreen({user}) {
   })
   const listItem = listItems?.find(li => li.bookId === bookId) ?? null
 
-  const book = data?.book ?? loadingBook
   const {title, author, coverImageUrl, publisher, synopsis} = book
 
   return (
