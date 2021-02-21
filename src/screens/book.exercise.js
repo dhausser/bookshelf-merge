@@ -123,7 +123,6 @@ function ListItemTimeframe({listItem}) {
 }
 
 function NotesTextarea({listItem, user}) {
-  // 🐨 call useMutation here
   const [mutate] = useMutation(
     updates =>
       client(`list-items/${updates.id}`, {
