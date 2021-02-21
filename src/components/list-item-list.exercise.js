@@ -15,9 +15,8 @@ function ListItemList({
   const {data: listItems} = useQuery({
     queryKey: 'list-items',
     queryFn: () =>
-      client('list-items', {token: user.token}).then(data => data.listItems),
+      client(`list-items`, {token: user.token}).then(data => data.listItems),
   })
-
   const filteredListItems = listItems?.filter(filterListItems)
 
   if (!listItems?.length) {

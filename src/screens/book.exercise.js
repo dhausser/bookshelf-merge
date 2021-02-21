@@ -27,7 +27,6 @@ const loadingBook = {
 
 function BookScreen({user}) {
   const {bookId} = useParams()
-
   const {data: book = loadingBook} = useQuery({
     queryKey: ['book', {bookId}],
     queryFn: () =>
@@ -37,7 +36,7 @@ function BookScreen({user}) {
   const {data: listItems} = useQuery({
     queryKey: 'list-items',
     queryFn: () =>
-      client('list-items', {token: user.token}).then(data => data.listItems),
+      client(`list-items`, {token: user.token}).then(data => data.listItems),
   })
   const listItem = listItems?.find(li => li.bookId === bookId) ?? null
 
@@ -132,7 +131,6 @@ function NotesTextarea({listItem, user}) {
       }),
     {onSettled: () => queryCache.invalidateQueries('list-items')},
   )
-
   const debouncedMutate = React.useMemo(() => debounceFn(mutate, {wait: 300}), [
     mutate,
   ])
