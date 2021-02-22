@@ -17,9 +17,8 @@ import {StatusButtons} from 'components/status-buttons'
 
 function BookScreen({user}) {
   const {bookId} = useParams()
-  const {data: book} = useBook(bookId, user)
-
-  const {data: listItem} = useListItem(user, bookId)
+  const book = useBook(bookId, user)
+  const listItem = useListItem(user, bookId)
 
   const {title, author, coverImageUrl, publisher, synopsis} = book
 
