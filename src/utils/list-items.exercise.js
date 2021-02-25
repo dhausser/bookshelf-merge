@@ -2,6 +2,11 @@ import {useQuery, useMutation, queryCache} from 'react-query'
 import {setQueryDataForBook} from './books'
 import {client} from './api-client'
 
+function useListItem(user, bookId) {
+  const listItems = useListItems(user)
+  return listItems.find(li => li.bookId === bookId) ?? null
+}
+
 function useListItems(user) {
   const {data: listItems} = useQuery({
     queryKey: 'list-items',
@@ -17,15 +22,6 @@ function useListItems(user) {
   })
   return listItems ?? []
 }
-
-function useListItem(user, bookId) {
-  const listItems = useListItems(user)
-  return listItems.find(li => li.bookId === bookId) ?? null
-}
-
-// onMutate(variables) {},
-// onError(err, variables, onMutateValue) {},
-// onSettled(data, error, variables, onMutateValue) {},
 
 const defaultMutationOptions = {
   onError: (err, variables, recover) =>
