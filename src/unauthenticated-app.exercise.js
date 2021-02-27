@@ -109,7 +109,3 @@ function UnauthenticatedApp() {
 }
 
 export default UnauthenticatedApp
-
-// 🐨 Unfortunately, to make this work for our workshop,
-// you need to add this to src/unauthenticated-app.js:
-// export {default} from './unauthenticated-app.exercise'
