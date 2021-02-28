@@ -1,7 +1,12 @@
+import {queryCache} from 'react-query'
+import * as auth from 'auth-provider'
 import {server, rest} from 'test/server'
 import {client} from '../api-client'
 
 const apiURL = process.env.REACT_APP_API_URL
+
+jest.mock('react-query')
+jest.mock('auth-provider')
 
 // enable API mocking in test runs using the same request handlers
 // as for the client-side mocking.
@@ -65,10 +70,32 @@ test('allows for config overrides', async () => {
 })
 
 test('when data is provided, it is stringified and the method defaults to POST', async () => {
-  // 🐨 create a mock data object
-  // 🐨 create a server handler very similar to the previous ones to handle the post request
-  //    💰 Use rest.post instead of rest.get like we've been doing so far
-  // 🐨 call client with an endpoint and an object with the data
-  //    💰 client(endpoint, {data})
-  // 🐨 verify the request.body is equal to the mock data object you passed
+  const endpoint = 'test-endpoint'
+  server.use(
+    rest.post(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
+      return res(ctx.json(req.body))
+    }),
+  )
+
+  const data = {a: 'b'}
+  const result = await client(endpoint, {data})
+
+  expect(result).toEqual(data)
+})
+
+test('automatically logs the user out if a request returns a 401', async () => {
+  const endpoint = 'test-endpoint'
+  const mockResult = {mockValue: 'VALUE'}
+  server.use(
+    rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
+      return res(ctx.status(401), ctx.json(mockResult))
+    }),
+  )
+
+  const error = await client(endpoint).catch(e => e)
+
+  expect(error.message).toMatchInlineSnapshot(`"Please re-authenticate."`)
+
+  expect(queryCache.clear).toHaveBeenCalledTimes(1)
+  expect(auth.logout).toHaveBeenCalledTimes(1)
 })
