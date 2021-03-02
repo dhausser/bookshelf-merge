@@ -1,36 +1,47 @@
-// 🐨 here are the things you're going to need for this test:
-// import * as React from 'react'
-// import {render, screen, waitFor} from '@testing-library/react'
-// import {queryCache} from 'react-query'
-// import {buildUser, buildBook} from 'test/generate'
-// import * as auth from 'auth-provider'
-// import {AppProviders} from 'context'
-// import {App} from 'app'
+import * as React from 'react'
+import {render, screen, waitFor} from '@testing-library/react'
+import {queryCache} from 'react-query'
+import {buildUser, buildBook} from 'test/generate'
+import * as auth from 'auth-provider'
+import {AppProviders} from 'context'
+import {App} from 'app'
 
-// 🐨 after each test, clear the queryCache and auth.logout
+afterEach(() => {
+  queryCache.clear()
+  auth.logout()
+})
 
-test.todo('renders all the book information')
-// 🐨 "authenticate" the client by setting the auth.localStorageKey in localStorage to some string value (can be anything for now)
+test('renders all the book information', () => {
+  localStorage.setItem('localStorageKey', auth.localStorageKey)
 
-// 🐨 create a user using `buildUser`
-// 🐨 create a book use `buildBook`
-// 🐨 update the URL to `/book/${book.id}`
-//   💰 window.history.pushState({}, 'page title', route)
-//   📜 https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
+  const user = buildUser()
+  const book = buildBook()
+  window.history.pushState({}, 'book', `/book/${book.id}`)
 
-// 🐨 reassign window.fetch to another function and handle the following requests:
-// - url ends with `/me`: respond with {user}
-// - url ends with `/list-items`: respond with {listItems: []}
-// - url ends with `/books/${book.id}`: respond with {book}
-// 💰 window.fetch = async (url, config) => { /* handle stuff here*/ }
-// 💰 return Promise.resolve({ok: true, json: async () => ({ /* response data here */ })})
+  window.fetch = async (url, config) => {
+    switch (url) {
+      case `/me`: {
+        return Promise.resolve({ok: true, json: async () => ({user})})
+      }
+      case `/list-items`: {
+        return Promise.resolve({ok: true, json: async () => ({listItems: []})})
+      }
+      case `/book/${book.id}`: {
+        return Promise.resolve({ok: true, json: async () => ({book})})
+      }
+      default: {
+        break
+      }
+    }
+  }
 
-// 🐨 render the App component and set the wrapper to the AppProviders
-// (that way, all the same providers we have in the app will be available in our tests)
+  const {container} = render(<App />, {wrapper: <AppProviders />})
 
-// 🐨 use waitFor to wait for the queryCache to stop fetching and the loading
-// indicators to go away
-// 📜 https://testing-library.com/docs/dom-testing-library/api-async#waitfor
-// 💰 if (queryCache.isFetching or there are loading indicators) then throw an error...
+  waitFor(() => {
+    if (queryCache.isFetching) {
+      throw new Error('Still fetching')
+    }
+  })
 
-// 🐨 assert the book's info is in the document
+  screen.debug()
+})
