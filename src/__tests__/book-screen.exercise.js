@@ -1,14 +1,15 @@
 import * as React from 'react'
 import {render, screen, waitForElementToBeRemoved} from '@testing-library/react'
 import {queryCache} from 'react-query'
-import {buildUser, buildBook} from 'test/generate'
 import * as auth from 'auth-provider'
+import {buildUser, buildBook} from 'test/generate'
 import {AppProviders} from 'context'
 import {App} from 'app'
 
-afterEach(() => {
+// general cleanup
+afterEach(async () => {
   queryCache.clear()
-  auth.logout()
+  await auth.logout()
 })
 
 test('renders all the book information', async () => {
@@ -17,7 +18,7 @@ test('renders all the book information', async () => {
 
   const book = buildBook()
   const route = `/book/${book.id}`
-  window.history.pushState({}, 'book', route)
+  window.history.pushState({}, 'Test page', route)
 
   const originalFetch = window.fetch
   window.fetch = async (url, config) => {
