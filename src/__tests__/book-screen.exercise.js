@@ -101,36 +101,36 @@ test('can remove a list item for the book', async () => {
   ).not.toBeInTheDocument()
 })
 
-// test('can mark a list item as read', async () => {
-//   const user = await loginAsUser()
-//   const book = await booksDB.create(buildBook())
-//   const listItem = await listItemsDB.create(
-//     buildListItem({owner: user, book, finishDate: null}),
-//   )
-//   const route = `/book/${book.id}`
+test('can mark a list item as read', async () => {
+  const user = await loginAsUser()
+  const book = await booksDB.create(buildBook())
+  const listItem = await listItemsDB.create(
+    buildListItem({owner: user, book, finishDate: null}),
+  )
+  const route = `/book/${book.id}`
 
-//   await render(<App />, {route, user})
+  await render(<App />, {route, user})
 
-//   const markAsRead = screen.getByRole('button', {name: /mark as read/i})
-//   userEvent.click(markAsRead)
-//   expect(markAsRead).toBeDisabled()
+  const markAsRead = screen.getByRole('button', {name: /mark as read/i})
+  userEvent.click(markAsRead)
+  expect(markAsRead).toBeDisabled()
 
-//   await waitForLoadingToFinish()
+  await waitForLoadingToFinish()
 
-//   expect(
-//     screen.getByRole('button', {name: /mark as unread/i}),
-//   ).toBeInTheDocument()
-//   expect(screen.getAllByRole('radio', {name: /star/i})).toHaveLength(5)
+  expect(
+    screen.getByRole('button', {name: /mark as unread/i}),
+  ).toBeInTheDocument()
+  expect(screen.getAllByRole('radio', {name: /star/i})).toHaveLength(5)
 
-//   const startAndFinishDateNode = screen.getByLabelText(/start and finish date/i)
-//   expect(startAndFinishDateNode).toHaveTextContent(
-//     `${formatDate(listItem.startDate)} — ${formatDate(Date.now())}`,
-//   )
+  const startAndFinishDateNode = screen.getByLabelText(/start and finish date/i)
+  expect(startAndFinishDateNode).toHaveTextContent(
+    `${formatDate(listItem.startDate)} — ${formatDate(Date.now())}`,
+  )
 
-//   expect(
-//     screen.queryByRole('button', {name: /mark as read/i}),
-//   ).not.toBeInTheDocument()
-// })
+  expect(
+    screen.queryByRole('button', {name: /mark as read/i}),
+  ).not.toBeInTheDocument()
+})
 
 // test('can edit a note', async () => {
 //   // using fake timers to skip debounce time
