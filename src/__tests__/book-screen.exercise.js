@@ -1,5 +1,9 @@
 import * as React from 'react'
-import {render, screen, waitForElementToBeRemoved} from '@testing-library/react'
+import {
+  render as rtlRender,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {queryCache} from 'react-query'
 import * as auth from 'auth-provider'
@@ -22,8 +26,19 @@ afterEach(async () => {
   ])
 })
 
-function renderWithAppProviders() {
-  return render(<App />, {wrapper: AppProviders})
+async function render(ui, {route = '/list', user, ...renderOptions} = {}) {
+  user = typeof user === 'undefined' ? await loginAsUser() : user
+
+  window.history.pushState({}, 'Test page', route)
+
+  const returnValue = {
+    ...rtlRender(ui, {wrapper: AppProviders, ...renderOptions}),
+    user,
+  }
+
+  await waitForLoadingToFinish()
+
+  return returnValue
 }
 
 async function loginAsUser() {
@@ -44,15 +59,10 @@ const waitForLoadingToFinish = () =>
   ])
 
 test('renders all the book information', async () => {
-  await loginAsUser()
-
   const book = await booksDB.create(buildBook())
   const route = `/book/${book.id}`
-  window.history.pushState({}, 'Test page', route)
 
-  renderWithAppProviders()
-
-  await waitForLoadingToFinish()
+  await render(<App />, {route})
 
   expect(screen.getByRole('heading', {name: book.title})).toBeInTheDocument()
   expect(screen.getByText(book.author)).toBeInTheDocument()
@@ -81,15 +91,10 @@ test('renders all the book information', async () => {
 })
 
 test('can create a list item for the book', async () => {
-  await loginAsUser()
-
   const book = await booksDB.create(buildBook())
   const route = `/book/${book.id}`
-  window.history.pushState({}, 'Test page', route)
 
-  renderWithAppProviders()
-
-  await waitForLoadingToFinish()
+  await render(<App />, {route})
 
   const addToListButton = screen.getByRole('button', {name: /add to list/i})
   userEvent.click(addToListButton)
