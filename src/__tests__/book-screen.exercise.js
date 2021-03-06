@@ -132,30 +132,30 @@ test('can mark a list item as read', async () => {
   ).not.toBeInTheDocument()
 })
 
-// test('can edit a note', async () => {
-//   // using fake timers to skip debounce time
-//   jest.useFakeTimers()
-//   const user = await loginAsUser()
-//   const book = await booksDB.create(buildBook())
-//   const listItem = await listItemsDB.create(buildListItem({owner: user, book}))
-//   const route = `/book/${book.id}`
+test('can edit a note', async () => {
+  // using fake timers to skip debounce time
+  jest.useFakeTimers()
+  const user = await loginAsUser()
+  const book = await booksDB.create(buildBook())
+  const listItem = await listItemsDB.create(buildListItem({owner: user, book}))
+  const route = `/book/${book.id}`
 
-//   await render(<App />, {route, user})
+  await render(<App />, {route, user})
 
-//   const newNotes = faker.lorem.words()
-//   const notesTextarea = screen.getByRole('textbox', {name: /notes/i})
+  const newNotes = faker.lorem.words()
+  const notesTextarea = screen.getByRole('textbox', {name: /notes/i})
 
-//   userEvent.clear(notesTextarea)
-//   userEvent.type(notesTextarea, newNotes)
+  userEvent.clear(notesTextarea)
+  userEvent.type(notesTextarea, newNotes)
 
-//   // wait for the loading spinner to show up
-//   await screen.findByLabelText(/loading/i)
-//   // wait for the loading spinner to go away
-//   await waitForLoadingToFinish()
+  // wait for the loading spinner to show up
+  await screen.findByLabelText(/loading/i)
+  // wait for the loading spinner to go away
+  await waitForLoadingToFinish()
 
-//   expect(notesTextarea).toHaveValue(newNotes)
+  expect(notesTextarea).toHaveValue(newNotes)
 
-//   expect(await listItemsDB.read(listItem.id)).toMatchObject({
-//     notes: newNotes,
-//   })
-// })
+  expect(await listItemsDB.read(listItem.id)).toMatchObject({
+    notes: newNotes,
+  })
+})
