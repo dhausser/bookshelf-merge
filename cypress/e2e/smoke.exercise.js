@@ -53,16 +53,16 @@ describe('smoke', () => {
       cy.findByRole('link', {name: /voice of war/i}).click()
     })
 
-    // cy.findByRole('button', {name: /remove from list/i}).click()
-    // cy.findByRole('textbox', {name: /notes/i}).should('not.exist')
-    // cy.findByRole('radio', {name: /5 stars/i}).should('not.exist')
+    cy.findByRole('button', {name: /remove from list/i}).click()
+    cy.findByRole('textbox', {name: /notes/i}).should('not.exist')
+    cy.findByRole('radio', {name: /5 stars/i}).should('not.exist')
 
-    // cy.findByRole('navigation').within(() => {
-    //   cy.findByRole('link', {name: /finished books/i}).click()
-    // })
+    cy.findByRole('navigation').within(() => {
+      cy.findByRole('link', {name: /finished books/i}).click()
+    })
 
-    // cy.findByRole('main').within(() => {
-    //   cy.findAllByRole('listitem').should('have.length', 0)
-    // })
+    cy.findByRole('main').within(() => {
+      cy.findAllByRole('listitem').should('have.length', 0)
+    })
   })
 })
