@@ -22,7 +22,11 @@ afterEach(async () => {
   ])
 })
 
-test('renders all the book information', async () => {
+function renderWithAppProviders() {
+  return render(<App />, {wrapper: AppProviders})
+}
+
+async function loginAsUser() {
   const user = buildUser()
   await usersDB.create(user)
   const authUser = await usersDB.authenticate(user)
@@ -31,17 +35,24 @@ test('renders all the book information', async () => {
   // every provider will be different and you'll need to adjust this
   // to whatever they do (you may even have to mock more of their functions).
   window.localStorage.setItem(auth.localStorageKey, authUser.token)
+}
+
+const waitForLoadingToFinish = () =>
+  waitForElementToBeRemoved(() => [
+    ...screen.queryAllByLabelText(/loading/i),
+    ...screen.queryAllByText(/loading/i),
+  ])
+
+test('renders all the book information', async () => {
+  await loginAsUser()
 
   const book = await booksDB.create(buildBook())
   const route = `/book/${book.id}`
   window.history.pushState({}, 'Test page', route)
 
-  render(<App />, {wrapper: AppProviders})
+  renderWithAppProviders()
 
-  await waitForElementToBeRemoved(() => [
-    ...screen.queryAllByLabelText(/loading/i),
-    ...screen.queryAllByText(/loading/i),
-  ])
+  await waitForLoadingToFinish()
 
   expect(screen.getByRole('heading', {name: book.title})).toBeInTheDocument()
   expect(screen.getByText(book.author)).toBeInTheDocument()
@@ -70,34 +81,21 @@ test('renders all the book information', async () => {
 })
 
 test('can create a list item for the book', async () => {
-  const user = buildUser()
-  await usersDB.create(user)
-  const authUser = await usersDB.authenticate(user)
-  // this is what our auth provider does to persist the user's
-  // logged in state so it can give us a token without making a request
-  // every provider will be different and you'll need to adjust this
-  // to whatever they do (you may even have to mock more of their functions).
-  window.localStorage.setItem(auth.localStorageKey, authUser.token)
+  await loginAsUser()
 
   const book = await booksDB.create(buildBook())
   const route = `/book/${book.id}`
   window.history.pushState({}, 'Test page', route)
 
-  render(<App />, {wrapper: AppProviders})
+  renderWithAppProviders()
 
-  await waitForElementToBeRemoved(() => [
-    ...screen.queryAllByLabelText(/loading/i),
-    ...screen.queryAllByText(/loading/i),
-  ])
+  await waitForLoadingToFinish()
 
   const addToListButton = screen.getByRole('button', {name: /add to list/i})
   userEvent.click(addToListButton)
   expect(addToListButton).toBeDisabled()
 
-  await waitForElementToBeRemoved(() => [
-    ...screen.queryAllByLabelText(/loading/i),
-    ...screen.queryAllByText(/loading/i),
-  ])
+  await waitForLoadingToFinish()
 
   expect(
     screen.getByRole('button', {name: /mark as read/i}),
