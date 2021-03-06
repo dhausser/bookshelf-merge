@@ -134,7 +134,7 @@ test('can mark a list item as read', async () => {
 
 test('can edit a note', async () => {
   // using fake timers to skip debounce time
-  // jest.useFakeTimers()
+  jest.useFakeTimers()
   const user = await loginAsUser()
   const book = await booksDB.create(buildBook())
   const listItem = await listItemsDB.create(buildListItem({owner: user, book}))
