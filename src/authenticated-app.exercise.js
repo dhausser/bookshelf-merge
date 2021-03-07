@@ -1,18 +1,37 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react'
-import {Routes, Route, Link, useMatch} from 'react-router-dom'
-import {Button} from './components/lib'
+import {Routes, Route, Link as RouterLink, useMatch} from 'react-router-dom'
+import {ErrorBoundary} from 'react-error-boundary'
+import {Button, ErrorMessage, FullPageErrorFallback} from './components/lib'
 import * as mq from './styles/media-queries'
 import * as colors from './styles/colors'
+import {useAuth} from 'context/auth-context'
+import {ReadingListScreen} from './screens/reading-list'
+import {FinishedScreen} from './screens/finished'
 import {DiscoverBooksScreen} from './screens/discover'
 import {BookScreen} from './screens/book'
 import {NotFoundScreen} from './screens/not-found'
 
-function AuthenticatedApp({user, logout}) {
+function ErrorFallback({error}) {
   return (
-    <React.Fragment>
+    <ErrorMessage
+      error={error}
+      css={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    />
+  )
+}
+
+function AuthenticatedApp() {
+  const {user, logout} = useAuth()
+  return (
+    <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
       <div
         css={{
           display: 'flex',
@@ -47,17 +66,19 @@ function AuthenticatedApp({user, logout}) {
           <Nav />
         </div>
         <main css={{width: '100%'}}>
-          <AppRoutes user={user} />
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <AppRoutes />
+          </ErrorBoundary>
         </main>
       </div>
-    </React.Fragment>
+    </ErrorBoundary>
   )
 }
 
 function NavLink(props) {
   const match = useMatch(props.to)
   return (
-    <Link
+    <RouterLink
       css={[
         {
           display: 'block',
@@ -79,7 +100,7 @@ function NavLink(props) {
               borderLeft: `5px solid ${colors.indigo}`,
               background: colors.gray10,
               ':hover': {
-                background: colors.gray20,
+                background: colors.gray10,
               },
             }
           : null,
@@ -111,6 +132,12 @@ function Nav() {
         }}
       >
         <li>
+          <NavLink to="/list">Reading List</NavLink>
+        </li>
+        <li>
+          <NavLink to="/finished">Finished Books</NavLink>
+        </li>
+        <li>
           <NavLink to="/discover">Discover</NavLink>
         </li>
       </ul>
@@ -118,21 +145,16 @@ function Nav() {
   )
 }
 
-function AppRoutes({user}) {
+function AppRoutes() {
   return (
-    <div>
-      <Routes>
-        <Route path="/discover" element={<DiscoverBooksScreen user={user} />} />
-        <Route path="/book/:bookId" element={<BookScreen user={user} />} />
-        <Route path="*" element={<NotFoundScreen />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/list" element={<ReadingListScreen />} />
+      <Route path="/finished" element={<FinishedScreen />} />
+      <Route path="/discover" element={<DiscoverBooksScreen />} />
+      <Route path="/book/:bookId" element={<BookScreen />} />
+      <Route path="*" element={<NotFoundScreen />} />
+    </Routes>
   )
 }
 
 export {AuthenticatedApp}
-
-/*
-eslint
-  jsx-a11y/anchor-has-content: "off",
-*/
