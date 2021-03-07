@@ -1,17 +1,40 @@
 import ReactDOM from 'react-dom'
-import {screen} from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import {screen, waitForElementToBeRemoved} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import {server} from 'test/server'
 
-test('renders the app', () => {
+// enable API mocking in test runs using the same request handlers
+// as for the client-side mocking.
+beforeAll(() => server.listen())
+afterAll(() => server.close())
+afterEach(() => server.resetHandlers())
+
+// this is a pretty comprehensive test and CI is pretty slow...
+jest.setTimeout(25000)
+
+const waitForLoadingToFinish = () =>
+  waitForElementToBeRemoved(
+    () => [
+      ...screen.queryAllByLabelText(/loading/i),
+      ...screen.queryAllByText(/loading/i),
+    ],
+    {timeout: 4000},
+  )
+
+test('renders the app', async () => {
   const root = document.createElement('div')
   root.id = 'root'
   document.body.append(root)
 
   require('..')
 
-  screen.getByTitle('Bookshelf')
-  screen.getByRole('heading', {name: /Bookshelf/i})
-  screen.getByRole('button', {name: /Login/i})
-  screen.getByRole('button', {name: /Register/i})
+  userEvent.type(screen.getByPlaceholderText(/search/i), 'voice of war')
+  userEvent.click(screen.getByLabelText(/search/i))
+
+  await waitForLoadingToFinish()
+
+  expect(screen.getByText(/voice of war/i)).toBeInTheDocument()
 
   // cleanup
   ReactDOM.unmountComponentAtNode(root)
