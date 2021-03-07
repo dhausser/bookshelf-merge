@@ -3,9 +3,10 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react'
 import * as auth from 'auth-provider'
+import {BrowserRouter as Router} from 'react-router-dom'
 import {FullPageSpinner} from './components/lib'
 import * as colors from './styles/colors'
-import {client} from './utils/api-client.exercise'
+import {client} from './utils/api-client'
 import {useAsync} from './utils/hooks'
 import {AuthenticatedApp} from './authenticated-app'
 import {UnauthenticatedApp} from './unauthenticated-app'
@@ -17,7 +18,6 @@ async function getUser() {
   if (token) {
     const data = await client('me', {token})
     user = data.user
-    console.log(user)
   }
 
   return user
@@ -27,10 +27,10 @@ function App() {
   const {
     data: user,
     error,
-    isIdle,
     isLoading,
-    isSuccess,
+    isIdle,
     isError,
+    isSuccess,
     run,
     setData,
   } = useAsync()
@@ -69,10 +69,13 @@ function App() {
   }
 
   if (isSuccess) {
+    const props = {user, login, register, logout}
     return user ? (
-      <AuthenticatedApp user={user} logout={logout} />
+      <Router>
+        <AuthenticatedApp {...props} />
+      </Router>
     ) : (
-      <UnauthenticatedApp login={login} register={register} />
+      <UnauthenticatedApp {...props} />
     )
   }
 }
