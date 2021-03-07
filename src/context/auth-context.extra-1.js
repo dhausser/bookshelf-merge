@@ -8,9 +8,8 @@ import {client} from 'utils/api-client'
 import {useAsync} from 'utils/hooks'
 import {FullPageSpinner, FullPageErrorFallback} from 'components/lib'
 
-async function getUser() {
+async function bootstrapAppData() {
   let user = null
-  console.log('getUser')
 
   const token = await auth.getToken()
   if (token) {
@@ -20,11 +19,10 @@ async function getUser() {
     })
     user = data.user
   }
-
   return user
 }
 
-const userPromise = getUser()
+const appDataPromise = bootstrapAppData()
 
 const AuthContext = React.createContext()
 AuthContext.displayName = 'AuthContext'
@@ -43,8 +41,7 @@ function AuthProvider(props) {
   } = useAsync()
 
   React.useEffect(() => {
-    console.log('useEffect')
-    run(userPromise)
+    run(appDataPromise)
   }, [run])
 
   const login = React.useCallback(

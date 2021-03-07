@@ -2,9 +2,9 @@
   "name": "bookshelf",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://exercises-09-performance.bookshelf.lol/",
+  "homepage": "https://exercises-10-render-as-you-fetch.bookshelf.lol/",
   "engines": {
-    "node": "^10.13 || 12 || 14 || 15",
+    "node": "^10.13 || 12 || 14",
     "npm": ">=6"
   },
   "dependencies": {
