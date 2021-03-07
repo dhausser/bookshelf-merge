@@ -3,7 +3,7 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react'
 import {Input, Button, Spinner, FormGroup, ErrorMessage} from './components/lib'
-import {Modal, ModalOpenButton, ModalContents} from 'components/modal'
+import {Modal, ModalContents, ModalOpenButton} from './components/modal'
 import {Logo} from './components/logo'
 import {useAuth} from './context/auth-context'
 import {useAsync} from './utils/hooks'
@@ -85,7 +85,7 @@ function UnauthenticatedApp() {
           <ModalOpenButton>
             <Button variant="primary">Login</Button>
           </ModalOpenButton>
-          <ModalContents title={'Login'} aria-label="Login form">
+          <ModalContents aria-label="Login form" title="Login">
             <LoginForm
               onSubmit={login}
               submitButton={<Button variant="primary">Login</Button>}
@@ -96,7 +96,7 @@ function UnauthenticatedApp() {
           <ModalOpenButton>
             <Button variant="secondary">Register</Button>
           </ModalOpenButton>
-          <ModalContents title={'Register'} aria-label="Registration form">
+          <ModalContents aria-label="Registration form" title="Register">
             <LoginForm
               onSubmit={register}
               submitButton={<Button variant="secondary">Register</Button>}
@@ -108,4 +108,4 @@ function UnauthenticatedApp() {
   )
 }
 
-export {UnauthenticatedApp}
+export default UnauthenticatedApp

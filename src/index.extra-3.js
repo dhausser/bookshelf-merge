@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // export * from './unauthenticated-app.final'
 
 <<<<<<<< HEAD:src/index.extra-3.js
@@ -115,15 +116,22 @@ export * from './unauthenticated-app.exercise'
 // export * from './unauthenticated-app.extra-1'
 >>>>>>>> exercises/07-context:src/unauthenticated-app.js
 =======
+=======
+>>>>>>> exercises/09-performance
 import {loadDevTools} from './dev-tools/load'
 import './bootstrap'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
+<<<<<<< HEAD
+=======
+import {Profiler} from 'components/profiler'
+>>>>>>> exercises/09-performance
 import {App} from './app'
 import {AppProviders} from './context'
 
 loadDevTools(() => {
   ReactDOM.render(
+<<<<<<< HEAD
     <AppProviders>
       <App />
     </AppProviders>,
@@ -131,3 +139,13 @@ loadDevTools(() => {
   )
 })
 >>>>>>> exercises/07-context
+=======
+    <Profiler id="App Root" phases={['mount']}>
+      <AppProviders>
+        <App />
+      </AppProviders>
+    </Profiler>,
+    document.getElementById('root'),
+  )
+})
+>>>>>>> exercises/09-performance
