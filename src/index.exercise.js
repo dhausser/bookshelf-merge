@@ -1,27 +1,29 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import 'bootstrap/dist/css/bootstrap-reboot.css'
-import '@reach/dialog/styles.css'
 import * as React from 'react'
-import ReactDOM from 'react-dom'
-import {Button, Input, FormGroup, Spinner} from './components/lib'
+import {Input, Button, Spinner, FormGroup, ErrorMessage} from './components/lib'
 import {Modal, ModalContents, ModalOpenButton} from './components/modal'
 import {Logo} from './components/logo'
+import {useAsync} from './utils/hooks'
 
 function LoginForm({onSubmit, submitButton}) {
+  const {isLoading, isError, error, run} = useAsync()
   function handleSubmit(event) {
     event.preventDefault()
     const {username, password} = event.target.elements
 
-    onSubmit({
-      username: username.value,
-      password: password.value,
-    })
+    run(
+      onSubmit({
+        username: username.value,
+        password: password.value,
+      }),
+    )
   }
 
   return (
     <form
+      onSubmit={handleSubmit}
       css={{
         display: 'flex',
         flexDirection: 'column',
@@ -32,7 +34,6 @@ function LoginForm({onSubmit, submitButton}) {
           maxWidth: '300px',
         },
       }}
-      onSubmit={handleSubmit}
     >
       <FormGroup>
         <label htmlFor="username">Username</label>
@@ -43,22 +44,21 @@ function LoginForm({onSubmit, submitButton}) {
         <Input id="password" type="password" />
       </FormGroup>
       <div>
-        {React.cloneElement(submitButton, {type: 'submit'})}
-        <Spinner css={{marginLeft: 5}} />
+        {React.cloneElement(
+          submitButton,
+          {type: 'submit'},
+          ...(Array.isArray(submitButton.props.children)
+            ? submitButton.props.children
+            : [submitButton.props.children]),
+          isLoading ? <Spinner css={{marginLeft: 5}} /> : null,
+        )}
       </div>
+      {isError ? <ErrorMessage error={error} /> : null}
     </form>
   )
 }
 
-function App() {
-  function login(formData) {
-    console.log('login', formData)
-  }
-
-  function register(formData) {
-    console.log('register', formData)
-  }
-
+function UnauthenticatedApp({login, register}) {
   return (
     <div
       css={{
@@ -106,4 +106,4 @@ function App() {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+export {UnauthenticatedApp}
