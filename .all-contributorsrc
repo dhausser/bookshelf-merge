@@ -384,6 +384,34 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "falldowngoboone",
+      "name": "Ryan Boone",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3603771?v=4",
+      "profile": "https://github.com/falldowngoboone",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "juanlatorre",
+      "name": "Juan Latorre",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4494526?v=4",
+      "profile": "https://juanlatorre.cl/",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "Groszczu",
+      "name": "Roch Goszczyński",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45833713?v=4",
+      "profile": "https://github.com/Groszczu",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
